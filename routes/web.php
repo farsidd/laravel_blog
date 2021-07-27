@@ -1,6 +1,8 @@
 <?php
-use App\Models\Post;
+
 use App\Models\Category;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('posts', [
-        'posts' => Post::with('category')->get()
+        'posts' => Post::latest()->with('category','author')->get()
     ]);
 });
 
@@ -40,15 +42,29 @@ Route::get('/', function () {
 //if you want the above approach but you need to filter data other than id then in that case  you will use the approach below | just add
 //key value pair name in that case slug | you want to filter post via slug or anything other than id
 
-Route::get('/posts/{post:slug}', function(Post $post){
+Route::get('/post/{post:slug}', function(Post $post){
     return view('post', [
-        'posts' => $post
+        'post' => $post
     ]);
 });
 
 Route::get('/categories/{category:slug}', function(Category $category){
     return view('posts', [
         'posts' => $category->posts
+
+        //you can eager load relatioship mean you can load relevent author and category while fetching category related post
+        //to save the multiple request to the server
+        //here i commented becasue we already done this in Post Model whenever the post model call it automatically fetch the relevent
+        //category and author.
+        
+        // 'posts' => $category->posts->load(['author','category'])
     ]);
 });
 
+Route::get('authors/{author:username}', function (User $author) {
+    return view('posts', [
+        'posts' => $author->posts
+
+        // 'posts' => $author->posts->load(['author','category'])
+    ]);
+});

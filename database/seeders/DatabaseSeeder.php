@@ -16,50 +16,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        //below commands will simply go to the respective factories like UserFactory and PostFactory and runn the commands there simply
+        
+        // User::factory()->create();
+        // Post::factory()->create();
 
-        Category::truncate();
-         User::truncate();
-         Post::truncate();
+        //but if you wanna overwrite something like i only want to make one user with specific name and 
+        //other data as the faker library inject into the fields randomly.
+        //and multiple post assigned to that user then below
+        //commands will work for you
 
-     $user =   User::factory()->create();
-
-      $cat1 =  Category::create([
-            'name' => "Personal",
-            'slug' => "personal"
+        $user = User::factory()->create([
+            'name' => "Farhan Siddique"
         ]);
-     $cat2 =   Category::create([
-            'name' => "Work",
-            'slug' => "work"
-        ]);
-      $cat3 =  Category::create([
-            'name' => "Hobbies",
-            'slug' => "hobbies"
-        ]);
-        Post::create([
-            'slug' => "my-first-post",
-            'category_id' => $cat1->id,
-            'user_id' => $user->id,
-            'title' => "My First Post",
-            'excerpt' => "my first post",
-            'body' => " This is the body of the post and this is awesome because this post belongs to nothing",
-        ]);
-
-        Post::create([
-            'slug' => "my-second-post",
-            'category_id' => $cat2->id,
-            'user_id' => $user->id,
-            'title' => "My Second Post",
-            'excerpt' => "my second post",
-            'body' => " This is the body of the post and this is awesome because this post belongs to nothing",
-        ]);
-
-        Post::create([
-            'slug' => "my-third-post",
-            'category_id' => $cat3->id,
-            'user_id' => $user->id,
-            'title' => "My Third Post",
-            'excerpt' => "my third post",
-            'body' => " This is the body of the post and this is awesome because this post belongs to nothing",
+        Post::factory(5)->create([
+            'user_id' => $user->id
         ]);
 
     }
