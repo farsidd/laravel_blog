@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
@@ -16,11 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('posts', [
-        'posts' => Post::latest()->with('category','author')->get()
-    ]);
-});
+Route::get('/', [PostController::class, 'index'] )->name('home');
 
 //normal way to access data through id
 
@@ -50,7 +47,9 @@ Route::get('/post/{post:slug}', function(Post $post){
 
 Route::get('/categories/{category:slug}', function(Category $category){
     return view('posts', [
-        'posts' => $category->posts
+        'posts' => $category->posts,
+        'categories' => Category::all(),
+        'currentCategory' => $category
 
         //you can eager load relatioship mean you can load relevent author and category while fetching category related post
         //to save the multiple request to the server
@@ -61,7 +60,7 @@ Route::get('/categories/{category:slug}', function(Category $category){
     ]);
 });
 
-Route::get('authors/{author:username}', function (User $author) {
+Route::get('author/{author:username}', function (User $author) {
     return view('posts', [
         'posts' => $author->posts
 
